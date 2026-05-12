@@ -1,909 +1,206 @@
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMISEARCH - Tanulj hatékonyabban</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --primary: #6C5CE7;
-    --primary-dark: #5A4BD1;
-    --secondary: #A29BFE;
-    --dark: #2D3436;
-    --light: #F9FAFB;
-  }
-  
-  * {
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  body {
-    scroll-behavior: smooth;
-  }
-  
-  .gradient-text {
-    background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  
-  .hero-pattern {
-    background-color: #F9FAFB;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .hero-pattern::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 600 600' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236C5CE7' fill-opacity='0.09'%3E%3Cpath d='M450 100 L480 80 L510 100 L510 180 L480 160 L450 180 Z M480 160 L480 240 L510 220 L510 140 Z M450 180 L450 260 L480 240 Z'/%3E%3Cpath d='M480 80 L510 60 L550 80 L550 240 L510 220 L510 100 Z'/%3E%3Cpath d='M480 95 L580 95 L590 100 L590 110 L480 110 Z'/%3E%3Crect x='80' y='400' width='120' height='80' rx='4'/%3E%3Crect x='100' y='390' width='120' height='80' rx='4' opacity='0.7'/%3E%3Crect x='120' y='380' width='120' height='80' rx='4' opacity='0.5'/%3E%3Cline x1='130' y1='400' x2='230' y2='400' stroke='%23FFFFFF' stroke-width='2' opacity='0.4'/%3E%3Cline x1='130' y1='415' x2='220' y2='415' stroke='%23FFFFFF' stroke-width='2' opacity='0.4'/%3E%3Cline x1='130' y1='430' x2='230' y2='430' stroke='%23FFFFFF' stroke-width='2' opacity='0.4'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 600px;
-    background-position: 85% 50%;
-    background-repeat: no-repeat;
-    opacity: 1;
-    z-index: 0;
-  }
-  
-  .glass-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-  
-  .hover-lift {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  
-  .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 40px -15px rgba(108, 92, 231, 0.3);
-  }
-  
-  .btn-primary {
-    background: linear-gradient(135deg, #6C5CE7 0%, #5A4BD1 100%);
-    transition: all 0.3s ease;
-  }
-  
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(108, 92, 231, 0.4);
-  }
-  
-  .upload-box {
-    border: 2px dashed #A29BFE;
-    transition: all 0.3s ease;
-  }
-  
-  .upload-box:hover, .upload-box.dragover {
-    border-color: #6C5CE7;
-    background: rgba(108, 92, 231, 0.05);
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-  
-  .float-animation {
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  .lang-toggle {
-    position: relative;
-  }
-  
-  .lang-toggle input {
-    display: none;
-  }
-  
-  .modal {
-    display: none;
-    animation: fadeIn 0.3s ease;
-  }
-  
-  .modal.active {
-    display: flex;
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  .faq-item.active .faq-answer {
-    max-height: 500px;
-    padding-top: 1rem;
-  }
-  
-  .faq-answer {
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jegyzet AI Tutor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      background: #f5f5f5; 
+    }
+  .card { 
+      background: white; 
+      padding: 20px; 
+      border-radius: 12px; 
+      margin: 20px 0; 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+    }
+    button { 
+      background: #6366f1; 
+      color: white; 
+      border: none; 
+      padding: 10px 20px; 
+      border-radius: 8px; 
+      cursor: pointer; 
+      margin: 5px;
+    }
+    button:hover { background: #4f46e5; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    input, textarea { 
+      width: 100%; 
+      padding: 10px; 
+      margin: 8px 0; 
+      border: 1px solid #ddd; 
+      border-radius: 8px; 
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+  .hidden { display: none; }
+  .chat-msg { 
+      margin: 10px 0; 
+      padding: 12px; 
+      border-radius: 8px; 
+      line-height: 1.5;
+    }
+  .user-msg { 
+      background: #e0e7ff; 
+      text-align: right; 
+      margin-left: 20%;
+    }
+  .bot-msg { 
+      background: #f3f4f6; 
+      margin-right: 20%;
+    }
+    #chatBox { 
+      max-height: 400px; 
+      overflow-y: auto; 
+      border: 1px solid #e5e7eb;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    h1 { color: #111827; }
+    h3 { color: #374151; margin-top: 24px; }
+  </style>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body>
+  <h1>Jegyzet AI Tutor</h1>
 
-<!-- Header -->
-<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16 md:h-20">
-      <!-- Logo -->
-      <div class="flex items-center space-x-2">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] flex items-center justify-center">
-          <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
-        </div>
-        <span class="text-2xl font-extrabold gradient-text">AMISEARCH</span>
-      </div>
-
-      <!-- Desktop Nav -->
-      <nav class="hidden lg:flex items-center space-x-8">
-        <a href="#funkciok" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition" data-hu="Funkciók" data-en="Features">Funkciók</a>
-        <a href="#arak" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition" data-hu="Árak" data-en="Pricing">Árak</a>
-        <button onclick="openModal('aiTutorModal')" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition">AI Tutor</button>
-        <a href="#teacher" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition" data-hu="Teacher Hub" data-en="Teacher Hub">Teacher Hub</a>
-        <a href="#rolunk" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition" data-hu="Rólunk" data-en="About">Rólunk</a>
-        <a href="#faq" class="text-gray-700 hover:text-[#6C5CE7] font-medium transition">FAQ</a>
-      </nav>
-
-      <!-- Right side -->
-      <div class="flex items-center space-x-3">
-        <!-- Language Toggle -->
-        <div class="lang-toggle">
-          <button onclick="toggleLang()" class="px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition flex items-center space-x-2">
-            <i class="fa-solid fa-globe text-[#6C5CE7]"></i>
-            <span id="langText" class="font-semibold text-sm">HU</span>
-          </button>
-        </div>
-        
-        <!-- Auth Buttons -->
-        <button onclick="openModal('loginModal')" class="hidden md:block px-5 py-2.5 text-[#6C5CE7] font-semibold hover:bg-purple-50 rounded-xl transition" data-hu="Belépés" data-en="Login">Belépés</button>
-        <button onclick="openModal('registerModal')" class="btn-primary px-5 py-2.5 text-white font-semibold rounded-xl" data-hu="Regisztráció" data-en="Sign Up">Regisztráció</button>
-        
-        <!-- Mobile Menu -->
-        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
-          <i class="fa-solid fa-bars text-xl text-gray-700"></i>
-        </button>
-      </div>
-    </div>
+  <div id="authCard" class="card">
+    <h2>Bejelentkezés / Regisztráció</h2>
+    <input id="email" type="email" placeholder="Email cím">
+    <input id="password" type="password" placeholder="Jelszó - min 6 karakter">
+    <button onclick="signUp()">Regisztráció</button>
+    <button onclick="signIn()">Bejelentkezés</button>
+    <p id="authError" style="color: #dc2626; margin-top: 10px;"></p>
   </div>
-  
-  <!-- Mobile Menu -->
-  <div id="mobileMenu" class="hidden lg:hidden border-t border-gray-100 bg-white">
-    <div class="px-4 py-4 space-y-3">
-      <a href="#funkciok" class="block py-2 text-gray-700 font-medium" data-hu="Funkciók" data-en="Features">Funkciók</a>
-      <a href="#arak" class="block py-2 text-gray-700 font-medium" data-hu="Árak" data-en="Pricing">Árak</a>
-      <button onclick="openModal('aiTutorModal')" class="block py-2 text-gray-700 font-medium text-left w-full">AI Tutor</button>
-      <a href="#teacher" class="block py-2 text-gray-700 font-medium" data-hu="Teacher Hub" data-en="Teacher Hub">Teacher Hub</a>
-      <a href="#rolunk" class="block py-2 text-gray-700 font-medium" data-hu="Rólunk" data-en="About">Rólunk</a>
-      <a href="#faq" class="block py-2 text-gray-700 font-medium">FAQ</a>
-      <button onclick="openModal('loginModal')" class="block w-full py-2.5 text-[#6C5CE7] font-semibold text-center rounded-xl border-2 border-[#6C5CE7]" data-hu="Belépés" data-en="Login">Belépés</button>
-    </div>
-  </div>
-</header>
 
-<!-- Hero Section -->
-<section class="hero-pattern relative pt-12 pb-20 md:pt-20 md:pb-32">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <!-- Left Content -->
-      <div class="space-y-8">
-        <div class="inline-flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-md">
-          <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-          <span class="text-sm font-medium text-gray-700" data-hu="AI-powered tanulási platform" data-en="AI-powered learning platform">AI-powered tanulási platform</span>
-        </div>
-        
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900">
-          <span data-hu="Tanulj hatékonyabban!" data-en="Learn more efficiently!">Tanulj hatékonyabban!</span>
-          <br>
-          <span class="gradient-text" data-hu="Minden ami a sikeres vizsgához kell." data-en="Everything you need for exam success.">Minden ami a sikeres vizsgához kell.</span>
-        </h1>
-        
-        <p class="text-xl text-gray-600 leading-relaxed" data-hu="Egyszerű. Gyors. Pontos." data-en="Simple. Fast. Accurate.">Egyszerű. Gyors. Pontos.</p>
-        
-        <div class="flex flex-col sm:flex-row gap-4">
-          <button onclick="openModal('registerModal')" class="btn-primary px-8 py-4 text-white font-bold rounded-xl text-lg shadow-lg" data-hu="Kezdd el ingyen" data-en="Start for free">Kezdd el ingyen</button>
-          <button onclick="document.getElementById('funkciok').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 bg-white text-gray-900 font-bold rounded-xl text-lg shadow-md hover:shadow-xl transition" data-hu="Hogyan működik?" data-en="How it works?">Hogyan működik?</button>
-        </div>
-        
-        <div class="flex items-center space-x-6 pt-4">
-          <div class="flex -space-x-2">
-            <img src="https://i.pravatar.cc/100?img=1" class="w-10 h-10 rounded-full border-2 border-white" alt="user">
-            <img src="https://i.pravatar.cc/100?img=5" class="w-10 h-10 rounded-full border-2 border-white" alt="user">
-            <img src="https://i.pravatar.cc/100?img=8" class="w-10 h-10 rounded-full border-2 border-white" alt="user">
-            <img src="https://i.pravatar.cc/100?img=12" class="w-10 h-10 rounded-full border-2 border-white" alt="user">
-          </div>
-          <div>
-            <div class="flex items-center text-yellow-500">
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <i class="fa-solid fa-star"></i>
-              <span class="ml-2 text-gray-900 font-bold">4.9/5</span>
-            </div>
-            <p class="text-sm text-gray-600" data-hu="Megbízható oktatási eszköz" data-en="Trusted learning tool">Megbízható oktatási eszköz</p>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Right Content - Upload + Search -->
-      <div class="space-y-6">
-        <!-- Upload Box -->
-        <div class="glass-card rounded-2xl p-8 shadow-2xl hover-lift">
-          <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-2xl flex items-center justify-center mx-auto mb-4 float-animation">
-              <i class="fa-solid fa-cloud-arrow-up text-white text-2xl"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2" data-hu="Töltsd fel a saját jegyzeted" data-en="Upload your own notes">Töltsd fel a saját jegyzeted</h3>
-            <p class="text-gray-600" data-hu="PDF, DOCX, PPT vagy akár kézzel írt jegyzet" data-en="PDF, DOCX, PPT or even handwritten notes">PDF, DOCX, PPT vagy akár kézzel írt jegyzet</p>
-          </div>
-          
-          <div id="uploadBox" class="upload-box rounded-xl p-8 text-center cursor-pointer" onclick="document.getElementById('fileInput').click()">
-            <input type="file" id="fileInput" class="hidden" accept=".pdf,.docx,.pptx,.jpg,.png" multiple>
-            <i class="fa-solid fa-file-circle-plus text-5xl text-[#A29BFE] mb-4"></i>
-            <p class="text-gray-700 font-semibold mb-1" data-hu="Húzd ide a fájlokat" data-en="Drag files here">Húzd ide a fájlokat</p>
-            <p class="text-sm text-gray-500" data-hu="vagy kattints a tallózáshoz" data-en="or click to browse">vagy kattints a tallózáshoz</p>
-          </div>
-          
-          <div class="mt-6 grid grid-cols-3 gap-3 text-center text-xs text-gray-600">
-            <div><i class="fa-solid fa-bolt text-[#6C5CE7]"></i> <span data-hu="Azonnali" data-en="Instant">Azonnali</span></div>
-            <div><i class="fa-solid fa-lock text-[#6C5CE7]"></i> <span data-hu="Biztonságos" data-en="Secure">Biztonságos</span></div>
-            <div><i class="fa-solid fa-wand-magic-sparkles text-[#6C5CE7]"></i> AI</div>
-          </div>
-        </div>
-        
-        <!-- Search Box -->
-        <div class="glass-card rounded-2xl p-6 shadow-2xl hover-lift">
-          <h4 class="font-bold text-gray-900 mb-4 flex items-center">
-            <i class="fa-solid fa-magnifying-glass text-[#6C5CE7] mr-2"></i>
-            <span data-hu="Keresés a tananyagban" data-en="Search in materials">Keresés a tananyagban</span>
-          </h4>
-          <div class="flex gap-2">
-            <input type="text" placeholder="Pl: Makroökonómia 3. fejezet..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none transition" id="searchInput" data-hu-placeholder="Pl: Makroökonómia 3. fejezet..." data-en-placeholder="E.g: Macroeconomics Chapter 3...">
-            <button class="btn-primary px-6 py-3 text-white rounded-xl font-semibold">
-              <i class="fa-solid fa-arrow-right"></i>
-            </button>
-          </div>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="px-3 py-1 bg-purple-50 text-[#6C5CE7] rounded-full text-xs font-medium cursor-pointer hover:bg-purple-100" data-hu="Tételek" data-en="Topics">Tételek</span>
-            <span class="px-3 py-1 bg-purple-50 text-[#6C5CE7] rounded-full text-xs font-medium cursor-pointer hover:bg-purple-100" data-hu="Képletek" data-en="Formulas">Képletek</span>
-            <span class="px-3 py-1 bg-purple-50 text-[#6C5CE7] rounded-full text-xs font-medium cursor-pointer hover:bg-purple-100" data-hu="Definíciók" data-en="Definitions">Definíciók</span>
-            <span class="px-3 py-1 bg-purple-50 text-[#6C5CE7] rounded-full text-xs font-medium cursor-pointer hover:bg-purple-100" data-hu="Vizsgakérdések" data-en="Exam questions">Vizsgakérdések</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Funkciók Section -->
-<section id="funkciok" class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <span class="px-4 py-2 bg-purple-100 text-[#6C5CE7] rounded-full text-sm font-bold" data-hu="Funkciók" data-en="Features">Funkciók</span>
-      <h2 class="text-4xl md:text-5xl font-extrabold mt-6 mb-4" data-hu="Minden, amire szükséged van" data-en="Everything you need">Minden, amire szükséged van</h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-hu="AI-alapú eszközökkel segítünk, hogy gyorsabban és hatékonyabban tanulj" data-en="AI-powered tools help you learn faster and more efficiently">AI-alapú eszközökkel segítünk, hogy gyorsabban és hatékonyabban tanulj</p>
-    </div>
+  <div id="appCard" class="card hidden">
+    <p><strong>Bejelentkezve:</strong> <span id="userEmail"></span> 
+       <button onclick="signOut()" style="background: #ef4444;">Kijelentkezés</button>
+    </p>
     
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <!-- Feature 1 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-file-lines text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="Intelligens összefoglalók" data-en="Smart Summaries">Intelligens összefoglalók</h3>
-        <p class="text-gray-600" data-hu="Az AI automatikusan kiemeli a lényeget bármilyen jegyzetből vagy tantárgyból, másodpercek alatt." data-en="AI automatically highlights key points from any notes or subject in seconds.">Az AI automatikusan kiemeli a lényeget bármilyen jegyzetből vagy tantárgyból, másodpercek alatt.</p>
-      </div>
-      
-      <!-- Feature 2 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-circle-question text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="Vizsga szimulátor" data-en="Exam Simulator">Vizsga szimulátor</h3>
-        <p class="text-gray-600" data-hu="Generálj gyakorló tesztet a saját anyagaidból. Feleletválasztós, igaz-hamis, kifejtős kérdések." data-en="Generate practice tests from your materials. Multiple choice, true-false, essay questions.">Generálj gyakorló tesztet a saját anyagaidból. Feleletválasztós, igaz-hamis, kifejtős kérdések.</p>
-      </div>
-      
-      <!-- Feature 3 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-brain text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="Gondolattérképek" data-en="Mind Maps">Gondolattérképek</h3>
-        <p class="text-gray-600" data-hu="Vizualizáld a tananyagot interaktív gondolattérképekkel. Jobban megérted az összefüggéseket." data-en="Visualize material with interactive mind maps. Better understand connections.">Vizualizáld a tananyagot interaktív gondolattérképekkel. Jobban megérted az összefüggéseket.</p>
-      </div>
-      
-      <!-- Feature 4 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-comments text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="AI Tutor Chat" data-en="AI Tutor Chat">AI Tutor Chat</h3>
-        <p class="text-gray-600" data-hu="Kérdezz bármit a tananyagodról. Az AI tutor 24/7 elérhető és személyre szabottan magyaráz." data-en="Ask anything about your material. AI tutor available 24/7 with personalized explanations.">Kérdezz bármit a tananyagodról. Az AI tutor 24/7 elérhető és személyre szabottan magyaráz.</p>
-      </div>
-      
-      <!-- Feature 5 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-layer-group text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="Villámkártyák" data-en="Flashcards">Villámkártyák</h3>
-        <p class="text-gray-600" data-hu="Automatikus flashcard generálás a jegyzeteidből. Spaced repetition módszerrel hatékony memorizálás." data-en="Auto flashcard generation from notes. Efficient memorization with spaced repetition.">Automatikus flashcard generálás a jegyzeteidből. Spaced repetition módszerrel hatékony memorizálás.</p>
-      </div>
-      
-      <!-- Feature 6 -->
-      <div class="p-8 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 hover-lift">
-        <div class="w-14 h-14 bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] rounded-xl flex items-center justify-center mb-6">
-          <i class="fa-solid fa-chart-line text-white text-2xl"></i>
-        </div>
-        <h3 class="text-xl font-bold mb-3" data-hu="Haladás követés" data-en="Progress Tracking">Haladás követés</h3>
-        <p class="text-gray-600" data-hu="Kövesd nyomon a fejlődésed. Lásd, miben vagy erős és hol kell még gyakorolnod." data-en="Track your progress. See strengths and areas to practice more.">Kövesd nyomon a fejlődésed. Lásd, miben vagy erős és hol kell még gyakorolnod.</p>
-      </div>
-    </div>
-  </div>
-</section>
+    <h3>1. PDF feltöltés</h3>
+    <input type="file" id="pdfFile" accept=".pdf">
+    <button onclick="uploadPDF()">Feltöltés</button>
+    <p id="uploadStatus" style="color: #059669;"></p>
 
-<!-- Árak Section -->
-<section id="arak" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <span class="px-4 py-2 bg-purple-100 text-[#6C5CE7] rounded-full text-sm font-bold" data-hu="Árak" data-en="Pricing">Árak</span>
-      <h2 class="text-4xl md:text-5xl font-extrabold mt-6 mb-4" data-hu="Válassz csomagot" data-en="Choose your plan">Válassz csomagot</h2>
-      <p class="text-xl text-gray-600" data-hu="Kezdd ingyen, frissíts amikor készen állsz" data-en="Start free, upgrade when you're ready">Kezdd ingyen, frissíts amikor készen állsz</p>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-      <!-- Free -->
-      <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border-2 border-gray-100">
-        <h3 class="text-2xl font-bold mb-2" data-hu="Ingyenes" data-en="Free">Ingyenes</h3>
-        <p class="text-gray-600 mb-6" data-hu="Próbáld ki alapfunkciókkal" data-en="Try with basic features">Próbáld ki alapfunkciókkal</p>
-        <div class="mb-6">
-          <span class="text-5xl font-extrabold">0 Ft</span>
-          <span class="text-gray-600" data-hu="/hó" data-en="/mo">/hó</span>
-        </div>
-        <button onclick="openModal('registerModal')" class="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold rounded-xl transition mb-8" data-hu="Kezdd el" data-en="Get Started">Kezdd el</button>
-        <ul class="space-y-4">
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Havi 5 dokumentum feltöltés" data-en="5 document uploads/month">Havi 5 dokumentum feltöltés</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Alap AI összefoglalók" data-en="Basic AI summaries">Alap AI összefoglalók</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="10 kérdés/nap AI chat" data-en="10 questions/day AI chat">10 kérdés/nap AI chat</span></li>
-          <li class="flex items-start text-gray-400"><i class="fa-solid fa-xmark mr-3 mt-1"></i><span data-hu="Vizsga szimulátor" data-en="Exam simulator">Vizsga szimulátor</span></li>
-        </ul>
-      </div>
-      
-      <!-- Pro -->
-      <div class="bg-gradient-to-br from-[#6C5CE7] to-[#5A4BD1] rounded-2xl p-8 shadow-2xl hover-lift border-2 border-[#6C5CE7] relative transform scale-105">
-        <div class="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-yellow-400 text-gray-900 rounded-full text-sm font-bold" data-hu="Legnépszerűbb" data-en="Most Popular">Legnépszerűbb</div>
-        <h3 class="text-2xl font-bold mb-2 text-white">Pro</h3>
-        <p class="text-purple-100 mb-6" data-hu="Komoly tanuláshoz" data-en="For serious studying">Komoly tanuláshoz</p>
-        <div class="mb-6">
-          <span class="text-5xl font-extrabold text-white">2 990 Ft</span>
-          <span class="text-purple-100" data-hu="/hó" data-en="/mo">/hó</span>
-        </div>
-        <button onclick="openModal('registerModal')" class="w-full py-3 bg-white hover:bg-gray-100 text-[#6C5CE7] font-bold rounded-xl transition mb-8" data-hu="Frissítés Pro-ra" data-en="Upgrade to Pro">Frissítés Pro-ra</button>
-        <ul class="space-y-4 text-white">
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Korlátlan dokumentum feltöltés" data-en="Unlimited uploads">Korlátlan dokumentum feltöltés</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Fejlett AI összefoglalók" data-en="Advanced AI summaries">Fejlett AI összefoglalók</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Korlátlan AI chat" data-en="Unlimited AI chat">Korlátlan AI chat</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Vizsga szimulátor" data-en="Exam simulator">Vizsga szimulátor</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Gondolattérképek" data-en="Mind maps">Gondolattérképek</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check mr-3 mt-1"></i><span data-hu="Villámkártyák" data-en="Flashcards">Villámkártyák</span></li>
-        </ul>
-      </div>
-      
-      <!-- Team -->
-      <div class="bg-white rounded-2xl p-8 shadow-lg hover-lift border-2 border-gray-100">
-        <h3 class="text-2xl font-bold mb-2">Team</h3>
-        <p class="text-gray-600 mb-6" data-hu="Tanulócsoportoknak" data-en="For study groups">Tanulócsoportoknak</p>
-        <div class="mb-6">
-          <span class="text-5xl font-extrabold">9 990 Ft</span>
-          <span class="text-gray-600" data-hu="/hó" data-en="/mo">/hó</span>
-        </div>
-        <button onclick="openModal('registerModal')" class="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold rounded-xl transition mb-8" data-hu="Kapcsolat" data-en="Contact Sales">Kapcsolat</button>
-        <ul class="space-y-4">
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Minden Pro funkció" data-en="All Pro features">Minden Pro funkció</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="5 felhasználóig" data-en="Up to 5 users">5 felhasználóig</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Közös jegyzet megosztás" data-en="Shared notes">Közös jegyzet megosztás</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Csoportos vizsga mód" data-en="Group exam mode">Csoportos vizsga mód</span></li>
-          <li class="flex items-start"><i class="fa-solid fa-check text-green-500 mr-3 mt-1"></i><span data-hu="Prioritás support" data-en="Priority support">Prioritás support</span></li>
-        </ul>
-      </div>
-    </div>
+    <h3>2. AI Tutor Chat</h3>
+    <div id="chatBox"></div>
+    <textarea id="question" rows="3" placeholder="Kérdezz a feltöltött jegyzetedről..."></textarea>
+    <button onclick="askAI()">Küldés</button>
   </div>
-</section>
-
-<!-- Teacher Hub Section -->
-<section id="teacher" class="py-20 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div>
-        <span class="px-4 py-2 bg-purple-100 text-[#6C5CE7] rounded-full text-sm font-bold">Teacher Hub</span>
-        <h2 class="text-4xl md:text-5xl font-extrabold mt-6 mb-6" data-hu="Oktatóknak készült" data-en="Built for educators">Oktatóknak készült</h2>
-        <p class="text-xl text-gray-600 mb-8" data-hu="Készíts interaktív tananyagokat, teszteket és kövesd nyomon diákjaid haladását AI segítségével." data-en="Create interactive materials, tests and track student progress with AI.">Készíts interaktív tananyagokat, teszteket és kövesd nyomon diákjaid haladását AI segítségével.</p>
-        
-        <div class="space-y-6 mb-8">
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-              <i class="fa-solid fa-chalkboard-user text-[#6C5CE7] text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-bold text-lg mb-1" data-hu="Osztálykezelés" data-en="Class Management">Osztálykezelés</h4>
-              <p class="text-gray-600" data-hu="Hozz létre osztályokat, adj ki feladatokat, láss részletes analitikát." data-en="Create classes, assign tasks, see detailed analytics.">Hozz létre osztályokat, adj ki feladatokat, láss részletes analitikát.</p>
-            </div>
-          </div>
-          
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-              <i class="fa-solid fa-file-pen text-[#6C5CE7] text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-bold text-lg mb-1" data-hu="Automatikus értékelés" data-en="Auto Grading">Automatikus értékelés</h4>
-              <p class="text-gray-600" data-hu="Az AI kiértékeli a teszteket és részletes visszajelzést ad a diákoknak." data-en="AI grades tests and gives detailed feedback to students.">Az AI kiértékeli a teszteket és részletes visszajelzést ad a diákoknak.</p>
-            </div>
-          </div>
-          
-          <div class="flex items-start">
-            <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mr-4 flex-shrink-0">
-              <i class="fa-solid fa-shield-halved text-[#6C5CE7] text-xl"></i>
-            </div>
-            <div>
-              <h4 class="font-bold text-lg mb-1" data-hu="Plágium ellenőrzés" data-en="Plagiarism Check">Plágium ellenőrzés</h4>
-              <p class="text-gray-600" data-hu="Beépített plágium detektorral ellenőrizheted a beadott munkákat." data-en="Built-in plagiarism detector for submitted work.">Beépített plágium detektorral ellenőrizheted a beadott munkákat.</p>
-            </div>
-          </div>
-        </div>
-        
-        <button onclick="openModal('registerModal')" class="btn-primary px-8 py-4 text-white font-bold rounded-xl text-lg" data-hu="Próbáld ki ingyen" data-en="Try for free">Próbáld ki ingyen</button>
-      </div>
-      
-      <div class="relative">
-        <div class="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-8 shadow-2xl">
-          <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop" alt="Teacher" class="rounded-xl shadow-lg w-full">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Rólunk Section -->
-<section id="rolunk" class="py-20 bg-gray-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <span class="px-4 py-2 bg-purple-100 text-[#6C5CE7] rounded-full text-sm font-bold" data-hu="Rólunk" data-en="About Us">Rólunk</span>
-      <h2 class="text-4xl md:text-5xl font-extrabold mt-6 mb-4" data-hu="Küldetésünk" data-en="Our Mission">Küldetésünk</h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto" data-hu="Hiszünk abban, hogy a technológia segítségével minden diák kihozhatja magából a maximumot. Az AMISEARCH célja, hogy demokratizálja az oktatást és mindenki számára elérhetővé tegye a személyre szabott tanulást." data-en="We believe technology helps every student reach their full potential. AMISEARCH aims to democratize education and make personalized learning accessible to everyone.">Hiszünk abban, hogy a technológia segítségével minden diák kihozhatja magából a maximumot. Az AMISEARCH célja, hogy demokratizálja az oktatást és mindenki számára elérhetővé tegye a személyre szabott tanulást.</p>
-    </div>
-    
-    <div class="grid md:grid-cols-3 gap-8 text-center">
-      <div class="p-8">
-        <div class="text-5xl font-extrabold gradient-text mb-2">50+</div>
-        <p class="text-gray-600 font-medium" data-hu="Egyetem" data-en="Universities">Egyetem</p>
-      </div>
-      <div class="p-8">
-        <div class="text-5xl font-extrabold gradient-text mb-2">98%</div>
-        <p class="text-gray-600 font-medium" data-hu="Elégedettség" data-en="Satisfaction">Elégedettség</p>
-      </div>
-      <div class="p-8">
-        <div class="text-5xl font-extrabold gradient-text mb-2">24/7</div>
-        <p class="text-gray-600 font-medium" data-hu="AI Támogatás" data-en="AI Support">AI Támogatás</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FAQ Section -->
-<section id="faq" class="py-20 bg-white">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
-      <span class="px-4 py-2 bg-purple-100 text-[#6C5CE7] rounded-full text-sm font-bold">FAQ</span>
-      <h2 class="text-4xl md:text-5xl font-extrabold mt-6 mb-4" data-hu="Gyakori kérdések" data-en="Frequently Asked Questions">Gyakori kérdések</h2>
-    </div>
-    
-    <div class="space-y-4">
-      <div class="faq-item bg-gray-50 rounded-xl p-6 cursor-pointer hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold" data-hu="Hogyan működik az AI összefoglaló?" data-en="How does AI summarization work?">Hogyan működik az AI összefoglaló?</h3>
-          <i class="fa-solid fa-chevron-down text-[#6C5CE7] transition-transform"></i>
-        </div>
-        <div class="faq-answer text-gray-600">
-          <p data-hu="Feltöltöd a jegyzeted vagy tankönyved, és az AI elemzi a szöveget. Kiemeli a kulcsfogalmakat, definíciókat és összefüggéseket, majd érthető, strukturált összefoglalót készít belőle." data-en="Upload your notes or textbook and AI analyzes the text. It highlights key concepts, definitions and connections, then creates an understandable, structured summary.">Feltöltöd a jegyzeted vagy tankönyved, és az AI elemzi a szöveget. Kiemeli a kulcsfogalmakat, definíciókat és összefüggéseket, majd érthető, strukturált összefoglalót készít belőle.</p>
-        </div>
-      </div>
-      
-      <div class="faq-item bg-gray-50 rounded-xl p-6 cursor-pointer hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold" data-hu="Biztonságosak az adataim?" data-en="Is my data secure?">Biztonságosak az adataim?</h3>
-          <i class="fa-solid fa-chevron-down text-[#6C5CE7] transition-transform"></i>
-        </div>
-        <div class="faq-answer text-gray-600">
-          <p data-hu="Igen! Minden feltöltött dokumentum titkosítva tárolódik. Nem osztjuk meg harmadik féllel, és bármikor törölheted az adataidat. GDPR kompatibilis rendszert üzemeltetünk." data-en="Yes! All uploaded documents are encrypted. We don't share with third parties and you can delete your data anytime. We operate a GDPR compliant system.">Igen! Minden feltöltött dokumentum titkosítva tárolódik. Nem osztjuk meg harmadik féllel, és bármikor törölheted az adataidat. GDPR kompatibilis rendszert üzemeltetünk.</p>
-        </div>
-      </div>
-      
-      <div class="faq-item bg-gray-50 rounded-xl p-6 cursor-pointer hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold" data-hu="Milyen fájlformátumokat támogat?" data-en="What file formats are supported?">Milyen fájlformátumokat támogat?</h3>
-          <i class="fa-solid fa-chevron-down text-[#6C5CE7] transition-transform"></i>
-        </div>
-        <div class="faq-answer text-gray-600">
-          <p data-hu="PDF, DOCX, PPTX, TXT, valamint képformátumok (JPG, PNG) - akár kézzel írt jegyzetek is. Az OCR technológia felismeri a kézírást is." data-en="PDF, DOCX, PPTX, TXT, and image formats (JPG, PNG) - even handwritten notes. OCR technology recognizes handwriting.">PDF, DOCX, PPTX, TXT, valamint képformátumok (JPG, PNG) - akár kézzel írt jegyzetek is. Az OCR technológia felismeri a kézírást is.</p>
-        </div>
-      </div>
-      
-      <div class="faq-item bg-gray-50 rounded-xl p-6 cursor-pointer hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-        <div class="flex items-center justify-between">
-          <h3 class="text-lg font-bold" data-hu="Lemondható az előfizetés?" data-en="Can I cancel subscription?">Lemondható az előfizetés?</h3>
-          <i class="fa-solid fa-chevron-down text-[#6C5CE7] transition-transform"></i>
-        </div>
-        <div class="faq-answer text-gray-600">
-          <p data-hu="Természetesen! Bármikor lemondhatod, nincs hűségidő. A lemondás után a fizetett időszak végéig használhatod a Pro funkciókat." data-en="Of course! Cancel anytime, no commitment. After cancellation you can use Pro features until the end of paid period.">Természetesen! Bármikor lemondhatod, nincs hűségidő. A lemondás után a fizetett időszak végéig használhatod a Pro funkciókat.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Footer -->
-<footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-      <!-- Brand -->
-      <div>
-        <div class="flex items-center space-x-2 mb-6">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] flex items-center justify-center">
-            <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
-          </div>
-          <span class="text-2xl font-extrabold text-white">AMISEARCH</span>
-        </div>
-        <p class="text-sm mb-6" data-hu="AI-powered tanulási platform diákoknak és oktatóknak." data-en="AI-powered learning platform for students and educators.">AI-powered tanulási platform diákoknak és oktatóknak.</p>
-        <div class="flex space-x-4">
-          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-[#6C5CE7] rounded-lg flex items-center justify-center transition"><i class="fa-brands fa-facebook-f"></i></a>
-          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-[#6C5CE7] rounded-lg flex items-center justify-center transition"><i class="fa-brands fa-twitter"></i></a>
-          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-[#6C5CE7] rounded-lg flex items-center justify-center transition"><i class="fa-brands fa-linkedin-in"></i></a>
-          <a href="#" class="w-10 h-10 bg-gray-800 hover:bg-[#6C5CE7] rounded-lg flex items-center justify-center transition"><i class="fa-brands fa-instagram"></i></a>
-        </div>
-      </div>
-      
-      <!-- Legal -->
-      <div>
-        <h4 class="text-white font-bold mb-4" data-hu="Jogi" data-en="Legal">Jogi</h4>
-        <ul class="space-y-3 text-sm">
-          <li><a href="#" class="hover:text-white transition">Impresszum</a></li>
-          <li><a href="#" class="hover:text-white transition">Adatvédelem</a></li>
-          <li><a href="#" class="hover:text-white transition" data-hu="ÁSZF" data-en="Terms">ÁSZF</a></li>
-          <li><a href="#" class="hover:text-white transition">Cookie</a></li>
-        </ul>
-      </div>
-      
-      <!-- Company -->
-      <div>
-        <h4 class="text-white font-bold mb-4" data-hu="Cég" data-en="Company">Cég</h4>
-        <ul class="space-y-3 text-sm">
-          <li><a href="#rolunk" class="hover:text-white transition" data-hu="Rólunk" data-en="About">Rólunk</a></li>
-          <li><a href="#teacher" class="hover:text-white transition">Teacher Hub</a></li>
-          <li><a href="#" class="hover:text-white transition" data-hu="Karrier" data-en="Careers">Karrier</a></li>
-          <li><a href="#" class="hover:text-white transition" data-hu="Blog" data-en="Blog">Blog</a></li>
-        </ul>
-      </div>
-      
-      <!-- Universities -->
-      <div>
-        <h4 class="text-white font-bold mb-4" data-hu="Partner Egyetemek" data-en="Partner Universities">Partner Egyetemek</h4>
-        <div class="text-xs space-y-2">
-          <p class="font-semibold text-gray-400" data-hu="Világ TOP 5:" data-en="World TOP 5:">Világ TOP 5:</p>
-          <p>MIT, Stanford, Harvard, Oxford, Cambridge</p>
-          <p class="font-semibold text-gray-400 mt-3" data-hu="Magyarország TOP 5:" data-en="Hungary TOP 5:">Magyarország TOP 5:</p>
-          <p>ELTE, BME, Semmelweis, Corvinus, Szegedi</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
-      <p>&copy; 2024 AMISEARCH. <span data-hu="Minden jog fenntartva." data-en="All rights reserved.">Minden jog fenntartva.</span></p>
-      <div class="flex items-center space-x-2 mt-4 md:mt-0">
-        <i class="fa-solid fa-envelope text-[#6C5CE7]"></i>
-        <a href="mailto:info@amisearch.org" class="hover:text-white transition">info@amisearch.org</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<!-- AI Tutor Modal -->
-<div id="aiTutorModal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
-    <div class="p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-[#6C5CE7] to-[#A29BFE]">
-      <div class="flex items-center space-x-3">
-        <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-          <i class="fa-solid fa-robot text-white text-2xl"></i>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold text-white">AI Tutor</h3>
-          <p class="text-sm text-purple-100" data-hu="Kérdezz bármit a tananyagodról" data-en="Ask anything about your materials">Kérdezz bármit a tananyagodról</p>
-        </div>
-      </div>
-      <button onclick="closeModal('aiTutorModal')" class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-lg flex items-center justify-center transition">
-        <i class="fa-solid fa-xmark text-white"></i>
-      </button>
-    </div>
-    
-    <div class="p-6">
-      <div class="bg-gray-50 rounded-xl p-4 mb-4 h-64 overflow-y-auto" id="chatArea">
-        <div class="flex items-start space-x-3 mb-4">
-          <div class="w-8 h-8 bg-[#6C5CE7] rounded-full flex items-center justify-center flex-shrink-0">
-            <i class="fa-solid fa-robot text-white text-sm"></i>
-          </div>
-          <div class="bg-white rounded-xl p-3 shadow-sm">
-            <p class="text-sm" data-hu="Szia! Miben segíthetek? Töltsd fel a jegyzeted, és kérdezz bármit!" data-en="Hi! How can I help? Upload your notes and ask anything!">Szia! Miben segíthetek? Töltsd fel a jegyzeted, és kérdezz bármit!</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="flex gap-2">
-        <input type="text" id="chatInput" placeholder="Írd be a kérdésed..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none" data-hu-placeholder="Írd be a kérdésed..." data-en-placeholder="Type your question...">
-        <button onclick="sendMessage()" class="btn-primary px-6 py-3 text-white rounded-xl font-semibold">
-          <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Login Modal -->
-<div id="loginModal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl">
-    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-      <h3 class="text-2xl font-bold" data-hu="Belépés" data-en="Login">Belépés</h3>
-      <button onclick="closeModal('loginModal')" class="w-10 h-10 hover:bg-gray-100 rounded-lg flex items-center justify-center transition">
-        <i class="fa-solid fa-xmark text-gray-500"></i>
-      </button>
-    </div>
-    
-    <form class="p-6 space-y-4" onsubmit="handleLogin(event)">
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-        <input type="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none">
-      </div>
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2" data-hu="Jelszó" data-en="Password">Jelszó</label>
-        <input type="password" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none">
-      </div>
-      <div class="flex items-center justify-between text-sm">
-        <label class="flex items-center">
-          <input type="checkbox" class="mr-2 rounded">
-          <span data-hu="Emlékezz rám" data-en="Remember me">Emlékezz rám</span>
-        </label>
-        <a href="#" class="text-[#6C5CE7] hover:underline" data-hu="Elfelejtetted?" data-en="Forgot?">Elfelejtetted?</a>
-      </div>
-      <button type="submit" class="w-full btn-primary py-3 text-white font-bold rounded-xl" data-hu="Belépés" data-en="Login">Belépés</button>
-      <p class="text-center text-sm text-gray-600">
-        <span data-hu="Nincs még fiókod?" data-en="Don't have an account?">Nincs még fiókod?</span>
-        <button type="button" onclick="switchToRegister()" class="text-[#6C5CE7] font-semibold hover:underline" data-hu="Regisztrálj" data-en="Sign up">Regisztrálj</button>
-      </p>
-    </form>
-  </div>
-</div>
-
-<!-- Register Modal -->
-<div id="registerModal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm z-50 items-center justify-center p-4">
-  <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl">
-    <div class="p-6 border-b border-gray-100 flex items-center justify-between">
-      <h3 class="text-2xl font-bold" data-hu="Regisztráció" data-en="Sign Up">Regisztráció</h3>
-      <button onclick="closeModal('registerModal')" class="w-10 h-10 hover:bg-gray-100 rounded-lg flex items-center justify-center transition">
-        <i class="fa-solid fa-xmark text-gray-500"></i>
-      </button>
-    </div>
-    
-    <form class="p-6 space-y-4" onsubmit="handleRegister(event)">
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2" data-hu="Teljes név" data-en="Full Name">Teljes név</label>
-        <input type="text" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none">
-      </div>
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-        <input type="email" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none">
-      </div>
-      <div>
-        <label class="block text-sm font-semibold text-gray-700 mb-2" data-hu="Jelszó" data-en="Password">Jelszó</label>
-        <input type="password" required class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/20 outline-none">
-      </div>
-      <div class="flex items-start">
-        <input type="checkbox" required class="mt-1 mr-2 rounded">
-        <label class="text-sm text-gray-600" data-hu="Elfogadom az ÁSZF-et és az Adatvédelmi nyilatkozatot" data-en="I accept the Terms and Privacy Policy">Elfogadom az ÁSZF-et és az Adatvédelmi nyilatkozatot</label>
-      </div>
-      <button type="submit" class="w-full btn-primary py-3 text-white font-bold rounded-xl" data-hu="Fiók létrehozása" data-en="Create Account">Fiók létrehozása</button>
-      <p class="text-center text-sm text-gray-600">
-        <span data-hu="Már van fiókod?" data-en="Already have an account?">Már van fiókod?</span>
-        <button type="button" onclick="switchToLogin()" class="text-[#6C5CE7] font-semibold hover:underline" data-hu="Lépj be" data-en="Login">Lépj be</button>
-      </p>
-    </form>
-  </div>
-</div>
 
 <script>
-  let currentLang = 'hu';
+  // SUPABASE ADATOK - EZEK MÁR A TIEID
+  const SUPABASE_URL = 'https://rvgzvseejzbzmcqidnzc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_OFOpS0WMB4Sy0ciyIA9ySQ_59JH7Njh';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   
-  // Language Toggle
-  function toggleLang() {
-    currentLang = currentLang === 'hu' ? 'en' : 'hu';
-    document.getElementById('langText').textContent = currentLang.toUpperCase();
-    document.documentElement.lang = currentLang;
-    
-    // Update all text elements
-    document.querySelectorAll('[data-hu]').forEach(el => {
-      el.textContent = el.getAttribute(`data-${currentLang}`);
-    });
-    
-    // Update placeholders
-    document.querySelectorAll('[data-hu-placeholder]').forEach(el => {
-      el.placeholder = el.getAttribute(`data-${currentLang}-placeholder`);
-    });
-  }
-  
-  // Mobile Menu
-  function toggleMobileMenu() {
-    document.getElementById('mobileMenu').classList.toggle('hidden');
-  }
-  
-  // Modals
-  function openModal(id) {
-    document.getElementById(id).classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('active');
-    document.body.style.overflow = '';
-  }
-  
-  function switchToRegister() {
-    closeModal('loginModal');
-    setTimeout(() => openModal('registerModal'), 100);
-  }
-  
-  function switchToLogin() {
-    closeModal('registerModal');
-    setTimeout(() => openModal('loginModal'), 100);
-  }
-  
-  // Close modal on outside click
-  document.querySelectorAll('.modal').forEach(modal => {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal(modal.id);
-      }
-    });
-  });
-  
-  // FAQ Toggle
-  function toggleFaq(el) {
-    const wasActive = el.classList.contains('active');
-    document.querySelectorAll('.faq-item').forEach(item => {
-      item.classList.remove('active');
-      item.querySelector('.fa-chevron-down').style.transform = 'rotate(0deg)';
-    });
-    if (!wasActive) {
-      el.classList.add('active');
-      el.querySelector('.fa-chevron-down').style.transform = 'rotate(180deg)';
-    }
-  }
-  
-  // Upload Box Drag & Drop
-  const uploadBox = document.getElementById('uploadBox');
-  const fileInput = document.getElementById('fileInput');
-  
-  uploadBox.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    uploadBox.classList.add('dragover');
-  });
-  
-  uploadBox.addEventListener('dragleave', () => {
-    uploadBox.classList.remove('dragover');
-  });
-  
-  uploadBox.addEventListener('drop', (e) => {
-    e.preventDefault();
-    uploadBox.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    handleFiles(files);
-  });
-  
-  fileInput.addEventListener('change', (e) => {
-    handleFiles(e.target.files);
-  });
-  
-  function handleFiles(files) {
-    if (files.length > 0) {
-      alert(currentLang === 'hu' ? `${files.length} fájl kiválasztva!` : `${files.length} file(s) selected!`);
-    }
-  }
-  
-  // AI Chat
-  function sendMessage() {
-    const input = document.getElementById('chatInput');
-    const chatArea = document.getElementById('chatArea');
-    const message = input.value.trim();
-    
-    if (!message) return;
-    
-    // Add user message
-    chatArea.innerHTML += `
-      <div class="flex items-start space-x-3 mb-4 justify-end">
-        <div class="bg-[#6C5CE7] text-white rounded-xl p-3 shadow-sm max-w-[80%]">
-          <p class="text-sm">${message}</p>
-        </div>
-        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
-          <i class="fa-solid fa-user text-white text-sm"></i>
-        </div>
-      </div>
-    `;
-    
-    input.value = '';
-    chatArea.scrollTop = chatArea.scrollHeight;
-    
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = currentLang === 'hu' ? [
-        'Érdekes kérdés! Hadd magyarázzam el részletesen...',
-        'A feltöltött jegyzeted alapján a válasz:',
-        'Íme egy összefoglaló a témáról:'
-      ] : [
-        'Interesting question! Let me explain in detail...',
-        'Based on your uploaded notes, the answer is:',
-        'Here\'s a summary of the topic:'
-      ];
-      
-      chatArea.innerHTML += `
-        <div class="flex items-start space-x-3 mb-4">
-          <div class="w-8 h-8 bg-[#6C5CE7] rounded-full flex items-center justify-center flex-shrink-0">
-            <i class="fa-solid fa-robot text-white text-sm"></i>
-          </div>
-          <div class="bg-white rounded-xl p-3 shadow-sm">
-            <p class="text-sm">${responses[Math.floor(Math.random() * responses.length)]}</p>
-          </div>
-        </div>
-      `;
-      chatArea.scrollTop = chatArea.scrollHeight;
-    }, 1000);
-  }
-  
-  // Chat enter key
-  document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
-  
-  // Form handlers
-  function handleLogin(e) {
-    e.preventDefault();
-    alert(currentLang === 'hu' ? 'Sikeres bejelentkezés!' : 'Login successful!');
-    closeModal('loginModal');
-  }
-  
-  function handleRegister(e) {
-    e.preventDefault();
-    alert(currentLang === 'hu' ? 'Sikeres regisztráció! Üdvözlünk!' : 'Registration successful! Welcome!');
-    closeModal('registerModal');
-  }
-  
-  // Search functionality
-  document.getElementById('searchInput')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      const query = e.target.value.trim();
-      if (query) {
-        alert(currentLang === 'hu' ? `Keresés: "${query}"` : `Searching: "${query}"`);
-      }
-    }
-  });
-</script>
+  let currentUser = null;
 
+  // Auth állapot figyelése - automatikusan vált login/dashboard között
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session?.user) {
+      currentUser = session.user;
+      document.getElementById('authCard').classList.add('hidden');
+      document.getElementById('appCard').classList.remove('hidden');
+      document.getElementById('userEmail').textContent = currentUser.email;
+    } else {
+      currentUser = null;
+      document.getElementById('authCard').classList.remove('hidden');
+      document.getElementById('appCard').classList.add('hidden');
+    }
+  });
+
+  async function signUp() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    document.getElementById('authError').textContent = 'Regisztrálás...';
+    
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    document.getElementById('authError').textContent = error? error.message : 'Sikeres regisztráció!';
+  }
+
+  async function signIn() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    document.getElementById('authError').textContent = 'Bejelentkezés...';
+    
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    document.getElementById('authError').textContent = error? error.message : '';
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
+  async function uploadPDF() {
+    const file = document.getElementById('pdfFile').files[0];
+    if (!file) return alert('Válassz ki egy PDF fájlt');
+    if (!currentUser) return alert('Jelentkezz be előbb');
+    
+    document.getElementById('uploadStatus').textContent = 'Feltöltés folyamatban...';
+    
+    const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
+    const { data, error } = await supabase.storage.from('documents').upload(filePath, file);
+    
+    if (error) {
+      document.getElementById('uploadStatus').textContent = 'Hiba: ' + error.message;
+      document.getElementById('uploadStatus').style.color = '#dc2626';
+    } else {
+      document.getElementById('uploadStatus').textContent = 'Sikeres feltöltés: ' + file.name;
+      document.getElementById('uploadStatus').style.color = '#059669';
+    }
+  }
+
+  async function askAI() {
+    const question = document.getElementById('question').value.trim();
+    if (!question) return;
+    if (!currentUser) return alert('Jelentkezz be előbb');
+    
+    addMessage(question, 'user');
+    document.getElementById('question').value = '';
+    addMessage('Gondolkodom...', 'bot');
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    try {
+      const res = await fetch('/.netlify/functions/ai-tutor', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ question })
+      });
+      const data = await res.json();
+      updateLastBotMessage(data.answer || data.error || 'Nem kaptam választ a szervertől');
+    } catch (err) {
+      updateLastBotMessage('Hálózati hiba: ' + err.message);
+    }
+  }
+
+  function addMessage(text, sender) {
+    const chatBox = document.getElementById('chatBox');
+    const div = document.createElement('div');
+    div.className = `chat-msg ${sender}-msg`;
+    div.textContent = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function updateLastBotMessage(text) {
+    const msgs = document.querySelectorAll('.bot-msg');
+    if (msgs.length > 0) {
+      msgs[msgs.length - 1].textContent = text;
+    }
+  }
+</script>
 </body>
 </html>
