@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jegyzet AI Tutor</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+   .card { background: white; padding: 20px; border-radius: 12px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    button { background: #6366f1; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+    button:disabled { opacity: 0.5; }
+    input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+   .hidden { display: none; }
+   .chat-msg { margin: 10px 0; padding: 10px; border-radius: 8px; }
+   .user-msg { background: #e0e7ff; text-align: right; }
+   .bot-msg { background: #f3f4f6; }
+    #chatBox { max-height: 400px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h1>Jegyzet AI Tutor</h1>
+
+  <div id="authCard" class="card">
+    <h2>Bejelentkezés / Regisztráció</h2>
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Jelszó">
+    <button onclick="signUp()">Regisztráció</button>
+    <button onclick="signIn()">Bejelentkezés</button>
+    <p id="authError" style="color: red;"></p>
+  </div>
+
+  <div id="appCard" class="card hidden">
+    <p>Bejelentkezve: <span id="userEmail"></span> <button onclick="signOut()">Kijelentkezés</button></p>
+    
+    <h3>1. PDF feltöltés</h3>
+    <input type="file" id="pdfFile" accept=".pdf">
+    <button onclick="uploadPDF()">Feltöltés</button>
+    <p id="uploadStatus"></p>
+
+    <h3>2. AI Tutor Chat</h3>
+    <div id="chatBox"></div>
+    <textarea id="question" placeholder="Kérdezz a jegyzetedről..."></textarea>
+    <button onclick="askAI()">Küldés</button>
+  </div>
+
+<script>
+  // IDE ÍRD BE A SAJÁT ADATAID
+  const SUPABASE_URL = 'https://rvgzvseejzbzmcqidnzc.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_OFOpS0WMB4Sy0ciyIA9ySQ_59JH7Njh';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  let currentUser = null;
+
+  // Auth állapot figyelése
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (session) {
+      currentUser = session.user;
+      document.getElementById('authCard').classList.add('hidden');
+      document.getElementById('appCard').classList.remove('hidden');
+      document.getElementById('userEmail').textContent = currentUser.email;
+    } else {
+      currentUser = null;
+      document.getElementById('authCard').classList.remove('hidden');
+      document.getElementById('appCard').classList.add('hidden');
+    }
+  });
+
+  async function signUp() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const { error } = await supabase.auth.signUp({ email, password });
+    document.getElementById('authError').textContent = error? error.message : 'Nézd meg az emailed! Megerősítő link ment.';
+  }
+
+  async function signIn() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    document.getElementById('authError').textContent = error? error.message : '';
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+  }
+
+  async function uploadPDF() {
+    const file = document.getElementById('pdfFile').files[0];
+    if (!file) return alert('Válassz PDF-et');
+    if (!currentUser) return alert('Jelentkezz be');
+    
+    document.getElementById('uploadStatus').textContent = 'Feltöltés...';
+    
+    const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
+    const { error } = await supabase.storage.from('documents').upload(filePath, file);
+    
+    if (error) {
+      document.getElementById('uploadStatus').textContent = 'Hiba: ' + error.message;
+    } else {
+      document.getElementById('uploadStatus').textContent = 'Sikeres feltöltés: ' + file.name;
+      // Itt kellene még a PDF szöveggé alakítás és DB-be mentés, de azt a function csinálja majd
+    }
+  }
+
+  async function askAI() {
+    const question = document.getElementById('question').value;
+    if (!question ||!currentUser) return;
+    
+    addMessage(question, 'user');
+    document.getElementById('question').value = '';
+    addMessage('Gondolkodom...', 'bot');
+    
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    try {
+      const res = await fetch('/.netlify/functions/ai-tutor', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({ question })
+      });
+      const data = await res.json();
+      updateLastBotMessage(data.answer || data.error || 'Hiba történt');
+    } catch (err) {
+      updateLastBotMessage('Hálózati hiba: ' + err.message);
+    }
+  }
+
+  function addMessage(text, sender) {
+    const chatBox = document.getElementById('chatBox');
+    const div = document.createElement('div');
+    div.className = `chat-msg ${sender}-msg`;
+    div.textContent = text;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function updateLastBotMessage(text) {
+    const msgs = document.querySelectorAll('.bot-msg');
+    msgs[msgs.length - 1].textContent = text;
+  }
+</script>
+</body>
+</html>
